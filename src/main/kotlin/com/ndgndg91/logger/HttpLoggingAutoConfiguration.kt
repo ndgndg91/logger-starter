@@ -16,7 +16,7 @@ class HttpLoggingAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(value = ["ndgndg91.logging.http.enable"], havingValue = "true", matchIfMissing = false)
+    @ConditionalOnProperty(prefix = "ndgndg91.logging.http", value = ["enable"], havingValue = "true", matchIfMissing = false)
     fun loggingFilter(properties: HttpLoggingProperties): FilterRegistrationBean<HttpLoggingFilter> {
         val registrationBean: FilterRegistrationBean<HttpLoggingFilter> = FilterRegistrationBean()
         registrationBean.filter = HttpLoggingFilter(HttpLogger(), properties)
