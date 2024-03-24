@@ -11,7 +11,7 @@ import org.springframework.core.Ordered
 
 @Configuration
 @EnableConfigurationProperties(HttpLoggingProperties::class)
-@ConditionalOnProperty(value = ["logging.http.enabled"], havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(value = ["ndgndg91.logging.http"], havingValue = "true", matchIfMissing = false)
 @ConditionalOnWebApplication
 class HttpLoggingAutoConfiguration {
 
