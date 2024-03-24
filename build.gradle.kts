@@ -20,8 +20,12 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/ndgndg91/logger-starter")
             credentials {
-                username = project.findProperty("ghr.user")?.toString() ?: System.getenv("GITHUB_USERNAME")
-                password = project.findProperty("ghr.key")?.toString() ?: System.getenv("GITHUB_TOKEN")
+                username = if (project.findProperty("ghr.user")?.toString()?.isBlank() == true) {
+                    System.getenv("GITHUB_USERNAME")
+                } else project.findProperty("ghr.user")?.toString()
+                password = if (project.findProperty("ghr.key")?.toString()?.isBlank() == true) {
+                    System.getenv("GITHUB_TOKEN")
+                } else project.findProperty("ghr.key")?.toString()
             }
         }
     }
