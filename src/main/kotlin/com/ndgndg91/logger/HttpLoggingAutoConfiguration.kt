@@ -1,5 +1,6 @@
 package com.ndgndg91.logger
 
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 
 @Configuration
+@AutoConfiguration
 @EnableConfigurationProperties(HttpLoggingProperties::class)
 @ConditionalOnWebApplication
 class HttpLoggingAutoConfiguration {
