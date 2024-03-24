@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <appender name="REQUEST_LOG" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CONSOLE-JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.ndgndg91.logger.JsonLoggingLayout">
+                <timestampFormatTimezoneId>Etc/UTC</timestampFormatTimezoneId>
+                <appendLineSeparator>true</appendLineSeparator>
+                <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                </jsonFormatter>
+            </layout>
+        </encoder>
+    </appender>
+
+    <!-- root logger -->
+    <springProfile name="!local &amp; !default">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE-JSON" />
+        </root>
+    </springProfile>
+
+
+    <springProfile name="local, default">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+
+    <!-- request logger -->
+    <logger name="com.ndgndg91.logger.HttpLogger" level="DEBUG" additivity="false">
+        <appender-ref ref="REQUEST_LOG"/>
+    </logger>
+
+</configuration>

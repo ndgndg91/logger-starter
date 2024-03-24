@@ -1,0 +1,45 @@
+name: publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Publish Version'
+        required: true
+        type: string
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  publish:
+    # The type of runner that the job will run on
+    runs-on: ubuntu
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          # -- distribution: https://github.com/actions/setup-java#supported-distributions
+          distribution: 'corretto'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Publish Plugin # check https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_markers
+        run: |
+          ./gradlew publish -Pversion={{ github.event.inputs.version }} --stacktrace
+        env:
+          GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release generation
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: ${{ github.event.inputs.version }}
+          draft: false
+          prerelease: false

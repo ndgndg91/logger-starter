@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    `maven-publish`
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
     kotlin("jvm") version "1.9.23"
@@ -13,15 +14,36 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
 }
 
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ndgndg91/logger-starter")
+            credentials {
+                username = project.findProperty("ghr.user")?.toString() ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("ghr.key")?.toString() ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    compileOnly("org.springframework.boot:spring-boot-starter-web")
+    compileOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+    compileOnly("org.jetbrains.kotlin:kotlin-reflect")
+    compileOnly("ch.qos.logback.contrib:logback-json-classic:0.1.5")
+    compileOnly("ch.qos.logback.contrib:logback-jackson:0.1.5")
+    testCompileOnly("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<KotlinCompile> {
