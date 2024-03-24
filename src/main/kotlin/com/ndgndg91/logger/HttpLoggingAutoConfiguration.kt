@@ -11,12 +11,12 @@ import org.springframework.core.Ordered
 
 @Configuration
 @EnableConfigurationProperties(HttpLoggingProperties::class)
-@ConditionalOnProperty(value = ["ndgndg91.logging.http"], havingValue = "true", matchIfMissing = false)
 @ConditionalOnWebApplication
 class HttpLoggingAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(value = ["ndgndg91.logging.http.enable"], havingValue = "true", matchIfMissing = false)
     fun loggingFilter(properties: HttpLoggingProperties): FilterRegistrationBean<HttpLoggingFilter> {
         val registrationBean: FilterRegistrationBean<HttpLoggingFilter> = FilterRegistrationBean()
         registrationBean.filter = HttpLoggingFilter(HttpLogger(), properties)
